@@ -1,0 +1,32 @@
+# ── Dependencies & build output ──
+node_modules/
+dist/
+coverage/
+
+# ── Secrets & local config ──
+.env
+.env.local
+.env.*.local
+
+# ── Claude Code / assistant instructions (machine-local) ──
+CLAUDE.md
+.claude/
+
+# ── Runtime state & local data ──
+.career-os-state.json
+.career-os-usage.json
+inbox/
+*.eml
+
+# Exported docker image tarball (offline / Unraid deploy)
+career-os-image.tar.gz
+
+# ── Logs ──
+*.log
+
+# stray spinner/temp artifact
+$out
+
+# Playwright MCP scratch (screenshots / snapshots)
+.playwright-mcp/
+*-iphone13.png

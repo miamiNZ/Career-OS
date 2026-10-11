@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Career OS · Admin</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header id="header" class="topbar">
+      <div class="header-left">
+        <button id="nav-toggle" class="nav-toggle js-nav-toggle" type="button" aria-label="Toggle menu">☰</button>
+        <div class="brand">
+          <img class="logo" src="/logo.png" width="40" height="40" alt="Career OS" />
+          <div>
+            <h1>Career&nbsp;OS <span class="version">Admin</span></h1>
+            <p class="tagline">Settings · scheduler</p>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <a class="btn btn-ghost" href="/">← Back to board</a>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside id="left-panel" class="left-panel">
+        <nav class="nav" aria-label="Main menu"><ul id="nav-list"></ul></nav>
+        <button class="minify-toggle js-nav-toggle" type="button" title="Collapse / expand menu" aria-label="Collapse menu">
+          <span class="minify-ico">«</span>
+        </button>
+      </aside>
+
+      <main id="content" class="content">
+        <div class="ribbon">
+          <span class="ribbon-crumb">Career OS</span>
+          <span class="ribbon-sep">›</span>
+          <span class="ribbon-here">Scheduler</span>
+        </div>
+
+        <div class="admin">
+          <section class="admin-card">
+            <h2>Job Scheduler</h2>
+            <p class="admin-status" id="sched-status">Loading…</p>
+
+            <form id="sched-form">
+              <label class="admin-check">
+                <input type="checkbox" id="enabled" /> Enable scheduled searches
+              </label>
+
+              <fieldset class="admin-modes">
+                <legend>Run</legend>
+
+                <div class="admin-row">
+                  <label class="admin-check">
+                    <input type="radio" name="mode" value="interval" /> Every
+                  </label>
+                  <input type="number" id="interval-value" min="1" step="1" value="60" />
+                  <select id="interval-unit">
+                    <option value="minutes">minutes</option>
+                    <option value="hours">hours</option>
+                  </select>
+                </div>
+
+                <div class="admin-row">
+                  <label class="admin-check">
+                    <input type="radio" name="mode" value="daily" /> Daily at
+                  </label>
+                  <input type="time" id="time" value="08:00" />
+                </div>
+              </fieldset>
+
+              <div class="admin-actions">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn" id="run-now" type="button">▶ Run now</button>
+              </div>
+              <p class="admin-hint">
+                Interval mode re-runs the full search every N minutes/hours. Daily mode runs
+                once a day at the given local time. Settings persist across restarts.
+              </p>
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <script src="/nav.js" type="module"></script>
+    <script src="/notify.js" type="module"></script>
+    <script src="/admin.js" type="module"></script>
+  </body>
+</html>

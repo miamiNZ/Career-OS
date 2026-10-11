@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Career OS · Dashboard</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header id="header" class="topbar">
+      <div class="header-left">
+        <button id="nav-toggle" class="nav-toggle js-nav-toggle" type="button" aria-label="Toggle menu">☰</button>
+        <div class="brand">
+          <img class="logo" src="/logo.png" width="40" height="40" alt="Career OS" />
+          <div>
+            <h1>Career&nbsp;OS <span id="app-version" class="version"></span></h1>
+            <p class="tagline">Job search · NZ · local AI</p>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div id="sched" class="sched" title="Scheduler"></div>
+        <span id="apikey" class="dot-chip" title="Ollama status"></span>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside id="left-panel" class="left-panel">
+        <nav class="nav" aria-label="Main menu"><ul id="nav-list"></ul></nav>
+        <button class="minify-toggle js-nav-toggle" type="button" title="Collapse / expand menu" aria-label="Collapse menu">
+          <span class="minify-ico">«</span>
+        </button>
+      </aside>
+
+      <main id="content" class="content">
+        <div class="ribbon">
+          <span class="ribbon-crumb">Career OS</span>
+          <span class="ribbon-sep">›</span>
+          <span class="ribbon-here">Dashboard</span>
+        </div>
+
+        <div class="home">
+          <h2 class="home-title">Pipeline at a glance</h2>
+          <div id="tiles" class="tiles"></div>
+
+          <div class="home-cards">
+            <section class="home-card">
+              <h3>Scheduler</h3>
+              <p id="sched-tile" class="home-stat">—</p>
+              <a class="btn btn-sm" href="/admin">Configure ▸</a>
+            </section>
+            <section class="home-card">
+              <h3>Local AI (Ollama)</h3>
+              <p id="ollama-tile" class="home-stat">—</p>
+            </section>
+            <section class="home-card">
+              <h3>Find work</h3>
+              <p class="home-stat">Run a search to pull fresh roles into Opportunities, then triage them on the board.</p>
+              <a class="btn btn-primary btn-sm" href="/opportunities">Open Opportunities ▸</a>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <script src="/nav.js" type="module"></script>
+    <script src="/notify.js" type="module"></script>
+    <script src="/dashboard.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+  Career OS - Unraid Docker template.
+
+  Pulls the image from GitHub Container Registry: ghcr.io/miaminz/career-os:latest.
+  The package is PRIVATE by default, so before first pull either:
+    - make it public: GitHub > Packages > career-os > settings > change visibility, OR
+    - log Unraid in:  docker login ghcr.io -u miaminz -p <read:packages PAT>
+  Then drop this file at:
+      /boot/config/plugins/dockerMan/templates-user/my-Career-OS.xml
+  It appears under Docker > Add Container > Template ("User templates").
+
+  NOTE: the Repository MUST be the full registry path (ghcr.io/miaminz/career-os).
+  A bare "career-os" resolves to Docker Hub and fails with "pull access denied".
+
+  Offline alternative (no registry): build a tarball with `make docker-save`,
+  `docker load` it on the server, and set Repository back to "career-os:latest".
+-->
+<Container version="2">
+  <Name>Career-OS</Name>
+  <Repository>ghcr.io/miaminz/career-os:latest</Repository>
+  <Registry>https://ghcr.io/miaminz/career-os</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support/>
+  <Project/>
+  <Overview>Career OS - a local-first job-hunting dashboard. It reads and writes an Obsidian vault (plain Markdown) as its datastore, scores and tailors job applications with a local Ollama model (or the optional Anthropic Claude API), and serves a web board on port 8787. Bind-mount your Obsidian vault to /vault. Local-only by design - nothing is exposed to the internet.</Overview>
+  <Category>Productivity: Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8787]/</WebUI>
+  <TemplateURL/>
+  <Icon>http://[IP]:[PORT:8787]/logo.png</Icon>
+  <ExtraParams>--add-host=host.docker.internal:host-gateway</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DonateText/>
+  <DonateLink/>
+  <Description>Career OS - local-first job-hunting dashboard backed by an Obsidian vault. Set "Vault" to your Obsidian vault path on the server (mounted at /vault). If you run Ollama, point OLLAMA_URL at it - host.docker.internal:11434 reaches the Unraid host. Leave ANTHROPIC_API_KEY blank for fully local operation.</Description>
+  <Config Name="WebUI Port" Target="8787" Default="8787" Mode="tcp" Description="Host port for the dashboard (maps to container port 8787)." Type="Port" Display="always" Required="true" Mask="false">8787</Config>
+  <Config Name="Vault (Obsidian)" Target="/vault" Default="/mnt/user/appdata/career-os/vault" Mode="rw" Description="Path on the server to your Obsidian vault. Mounted read-write at /vault." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/career-os/vault</Config>
+  <Config Name="OLLAMA_URL" Target="OLLAMA_URL" Default="http://host.docker.internal:11434" Mode="" Description="URL of your Ollama server for local scoring/tailoring. host.docker.internal:11434 reaches the Unraid host; or use http://&lt;server-ip&gt;:11434 if Ollama runs in another container." Type="Variable" Display="always" Required="false" Mask="false">http://host.docker.internal:11434</Config>
+  <Config Name="OLLAMA_MODEL" Target="OLLAMA_MODEL" Default="qwen3:32b" Mode="" Description="Ollama model used for scoring/tailoring." Type="Variable" Display="always" Required="false" Mask="false">qwen3:32b</Config>
+  <Config Name="ZEIL_EMAIL" Target="ZEIL_EMAIL" Default="" Mode="" Description="ZEIL job-seeker account email. Needed to search ZEIL (also add 'zeil' to the sites list in Career/Profile/job-search.md). Leave blank to disable ZEIL." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="ZEIL_PASSWORD" Target="ZEIL_PASSWORD" Default="" Mode="" Description="ZEIL account password (used for AWS Cognito SRP sign-in to mint a short-lived token). Leave blank to disable ZEIL." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="ANTHROPIC_API_KEY" Target="ANTHROPIC_API_KEY" Default="" Mode="" Description="Optional. Enables cloud Claude scoring. Leave blank for local-only (Ollama)." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="SCORING_MODEL" Target="SCORING_MODEL" Default="claude-haiku-4-5" Mode="" Description="Claude model for scoring + keyword extraction (only used if ANTHROPIC_API_KEY is set). Haiku is ~5x cheaper than Opus." Type="Variable" Display="always" Required="false" Mask="false">claude-haiku-4-5</Config>
+  <Config Name="USD_TO_NZD" Target="USD_TO_NZD" Default="1.67" Mode="" Description="USD to NZD rate for the dashboard cost estimate." Type="Variable" Display="advanced" Required="false" Mask="false">1.67</Config>
+  <Config Name="TZ" Target="TZ" Default="Pacific/Auckland" Mode="" Description="Timezone for the daily scheduler (IANA name, e.g. Pacific/Auckland)." Type="Variable" Display="always" Required="false" Mask="false">Pacific/Auckland</Config>
+  <Config Name="INGEST_SOURCE" Target="INGEST_SOURCE" Default="file" Mode="" Description="graph | imap | file. 'file' parses .eml/.txt alert files from the Inbox path." Type="Variable" Display="advanced" Required="false" Mask="false">file</Config>
+  <Config Name="INBOX_DIR" Target="INBOX_DIR" Default="/app/inbox" Mode="" Description="Folder scanned for alert files when INGEST_SOURCE=file. Matches the Inbox mount target." Type="Variable" Display="advanced" Required="false" Mask="false">/app/inbox</Config>
+  <Config Name="GRAPH_CLIENT_ID" Target="GRAPH_CLIENT_ID" Default="" Mode="" Description="Microsoft Graph: Azure AD app client ID (only if INGEST_SOURCE=graph)." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="GRAPH_TENANT_ID" Target="GRAPH_TENANT_ID" Default="" Mode="" Description="Microsoft Graph: Azure AD tenant ID." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="GRAPH_CLIENT_SECRET" Target="GRAPH_CLIENT_SECRET" Default="" Mode="" Description="Microsoft Graph: Azure AD client secret." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="GRAPH_MAIL_FOLDER" Target="GRAPH_MAIL_FOLDER" Default="JobAlerts" Mode="" Description="Mail folder your job-alert emails are filtered into (Graph)." Type="Variable" Display="advanced" Required="false" Mask="false">JobAlerts</Config>
+  <Config Name="IMAP_HOST" Target="IMAP_HOST" Default="outlook.office365.com" Mode="" Description="IMAP host (only if INGEST_SOURCE=imap)." Type="Variable" Display="advanced" Required="false" Mask="false">outlook.office365.com</Config>
+  <Config Name="IMAP_PORT" Target="IMAP_PORT" Default="993" Mode="" Description="IMAP port." Type="Variable" Display="advanced" Required="false" Mask="false">993</Config>
+  <Config Name="IMAP_USER" Target="IMAP_USER" Default="" Mode="" Description="IMAP username (email address)." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="IMAP_PASSWORD" Target="IMAP_PASSWORD" Default="" Mode="" Description="IMAP app password." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="IMAP_FOLDER" Target="IMAP_FOLDER" Default="JobAlerts" Mode="" Description="IMAP mail folder." Type="Variable" Display="advanced" Required="false" Mask="false">JobAlerts</Config>
+  <Config Name="SCHEDULE_ENABLED" Target="SCHEDULE_ENABLED" Default="false" Mode="" Description="Auto-run the read-side pipeline daily (true|false)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="SCHEDULE_TIME" Target="SCHEDULE_TIME" Default="08:00" Mode="" Description="Local time (HH:MM) for the daily auto-run." Type="Variable" Display="advanced" Required="false" Mask="false">08:00</Config>
+  <Config Name="Inbox (optional)" Target="/app/inbox" Default="/mnt/user/appdata/career-os/inbox" Mode="rw" Description="Optional. Folder for .eml/.txt job-alert files when INGEST_SOURCE=file. Leave blank to skip." Type="Path" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Logs" Target="/logs" Default="/mnt/user/appdata/career-os/logs" Mode="rw" Description="Rotating app log (career-os.log + archives). Mount to a host path to keep logs across container recreation." Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/career-os/logs</Config>
+  <Config Name="Config" Target="/app/config" Default="/mnt/user/appdata/career-os/config" Mode="rw" Description="Persistent app config folder (also holds the Career OS logo at /app/config/logo.png). Bind-mounting this hides the image's baked copy, so seed the host folder from the image if you rely on files here." Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/career-os/config</Config>
+  <Config Name="LOG_VERBOSE" Target="LOG_VERBOSE" Default="1" Mode="" Description="Verbose diagnostics (timings, scorer path, convert details). 1=on, 0=high-level only." Type="Variable" Display="advanced" Required="false" Mask="false">1</Config>
+  <Config Name="LOG_MAX_BYTES" Target="LOG_MAX_BYTES" Default="5242880" Mode="" Description="Rotate the log file when it reaches this size in bytes. Default 5 MB." Type="Variable" Display="advanced" Required="false" Mask="false">5242880</Config>
+  <Config Name="LOG_MAX_FILES" Target="LOG_MAX_FILES" Default="5" Mode="" Description="How many rotated log archives to keep (career-os.log.1 .. .N)." Type="Variable" Display="advanced" Required="false" Mask="false">5</Config>
+  <Config Name="VAULT_PATH" Target="VAULT_PATH" Default="/vault" Mode="" Description="Container path to the vault. Must match the Vault mount target (/vault). Do not change." Type="Variable" Display="advanced" Required="true" Mask="false">/vault</Config>
+  <Config Name="REVEAL_HOST_PATH" Target="REVEAL_HOST_PATH" Default="" Mode="" Description="Optional. The host path your vault maps to as seen from your desktop (e.g. an SMB share like \\server\appdata\career-os\vault). Lets the dashboard 'Show files' button return an openable path. Leave blank to skip." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="DASHBOARD_HOST" Target="DASHBOARD_HOST" Default="0.0.0.0" Mode="" Description="Bind address inside the container. Must be 0.0.0.0 for bridge networking. Do not change." Type="Variable" Display="advanced" Required="true" Mask="false">0.0.0.0</Config>
+  <Config Name="DASHBOARD_PORT" Target="DASHBOARD_PORT" Default="8787" Mode="" Description="Container listen port. Keep in sync with the WebUI Port target." Type="Variable" Display="advanced" Required="true" Mask="false">8787</Config>
+</Container>

@@ -1,0 +1,53 @@
+{
+  "name": "career-os",
+  "version": "1.20.0",
+  "license": "MIT",
+  "description": "AI-assisted NZ job-hunting pipeline. Reads/writes an Obsidian vault.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "_comment_threadpool": "UV_THREADPOOL_SIZE must be in the environment BEFORE node starts — libuv sizes the fs threadpool on first use, so setting it from inside the app is too late. The vault is a network share, so its ~560 note reads are latency-bound: at node's default of 4 a full scan takes 5.7s, at 64 it takes 0.4s. cross-env keeps that portable across cmd.exe and sh; the Dockerfile sets the same value as an ENV.",
+    "dev": "cross-env UV_THREADPOOL_SIZE=64 tsx watch src/index.ts",
+    "agents": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts agents",
+    "rescore": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts rescore",
+    "rescore:stale": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts rescore --stale",
+    "expire-applied": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts expire-applied",
+    "archive-applied": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts archive-applied",
+    "restore-dropped": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts restore-dropped",
+    "dedupe": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts dedupe",
+    "contacts": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts contacts",
+    "ingest": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts ingest",
+    "score": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts score",
+    "report": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts report",
+    "tailor": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts tailor",
+    "apply": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts apply",
+    "dashboard": "cross-env UV_THREADPOOL_SIZE=64 tsx src/cli.ts dashboard",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
+    "amazon-cognito-identity-js": "^6.3.12",
+    "dotenv": "^17.4.2",
+    "gray-matter": "^4.0.3",
+    "html-to-docx": "^1.8.0",
+    "inversify": "^8.1.1",
+    "reflect-metadata": "^0.2.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.0.1",
+    "@vitest/coverage-v8": "^4.1.9",
+    "cross-env": "^10.1.0",
+    "eslint": "^10.6.0",
+    "tsx": "^4.19.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^4.1.9"
+  }
+}

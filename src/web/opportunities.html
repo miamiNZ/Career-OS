@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Career OS · Opportunities</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header id="header" class="topbar">
+      <div class="header-left">
+        <button id="nav-toggle" class="nav-toggle js-nav-toggle" type="button" aria-label="Toggle menu">☰</button>
+        <div class="brand">
+          <img class="logo" src="/logo.png" width="40" height="40" alt="Career OS" />
+          <div>
+            <h1>Career&nbsp;OS <span id="app-version" class="version"></span></h1>
+            <p class="tagline">Job search · NZ · local AI</p>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div id="sched" class="sched" title="Scheduler"></div>
+        <span id="apikey" class="dot-chip" title="Ollama status"></span>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside id="left-panel" class="left-panel">
+        <nav class="nav" aria-label="Main menu"><ul id="nav-list"></ul></nav>
+        <button class="minify-toggle js-nav-toggle" type="button" title="Collapse / expand menu" aria-label="Collapse menu">
+          <span class="minify-ico">«</span>
+        </button>
+      </aside>
+
+      <main id="content" class="content">
+        <div class="ribbon">
+          <span class="ribbon-crumb">Career OS</span>
+          <span class="ribbon-sep">›</span>
+          <span id="ribbon-here" class="ribbon-here">Opportunities</span>
+          <button id="run" class="btn btn-primary ribbon-action" title="Search Seek, TradeMe, LinkedIn &amp; ZEIL, fetch full descriptions, score each job into Opportunities">
+            <span class="play">▶</span> Search jobs
+          </button>
+        </div>
+
+        <nav class="toolbar" aria-label="Filter jobs">
+          <input id="f-search" class="f-search" type="search" placeholder="Filter by title or company…" autocomplete="off" />
+          <label class="f-field"><span>Source</span>
+            <select id="f-source">
+              <option value="">All</option>
+              <option value="seek">Seek</option>
+              <option value="trademe">TradeMe</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="indeed">Indeed</option>
+              <option value="zeil">ZEIL</option>
+            </select>
+          </label>
+          <label class="f-field"><span>Type</span>
+            <select id="f-type">
+              <option value="">All</option>
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+              <option value="contract">Contract / temp</option>
+              <option value="casual">Casual</option>
+            </select>
+          </label>
+          <label class="f-field"><span>Engagement</span>
+            <select id="f-engagement">
+              <option value="">All</option>
+              <option value="permanent">Permanent</option>
+              <option value="contract">Contract / temp</option>
+            </select>
+          </label>
+          <label class="f-field"><span>Job Type</span>
+            <select id="f-remote">
+              <option value="">All</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="onsite">On-site</option>
+            </select>
+          </label>
+          <label class="f-field"><span>Region</span>
+            <select id="f-region" title="Filter by NZ region (matches the job's location text)">
+              <option value="">All NZ</option>
+            </select>
+          </label>
+          <label class="f-field"><span>District</span>
+            <select id="f-district" title="Filter by district within the chosen region" disabled>
+              <option value="">All</option>
+            </select>
+          </label>
+          <label class="f-field"><span>Match</span>
+            <select id="f-band">
+              <option value="">Any</option>
+              <option value="good">Good or better</option>
+              <option value="strong">Strong only</option>
+            </select>
+          </label>
+          <label class="f-field"><span>Sort</span>
+            <select id="f-sort">
+              <option value="match">Best match</option>
+              <option value="newest">Newest</option>
+            </select>
+          </label>
+          <label class="f-field"><span>Preset</span>
+            <select id="f-preset" title="Saved filter presets — applied to the board and used to steer the next Search">
+              <option value="">—</option>
+            </select>
+          </label>
+          <button id="f-save" class="btn btn-sm btn-ghost" type="button" title="Save the current filters as a preset">Save</button>
+          <button id="f-del" class="btn btn-sm btn-ghost" type="button" title="Delete the selected preset">Del</button>
+          <details id="col-menu" class="col-menu">
+            <summary class="btn btn-sm btn-ghost">Panels ▾</summary>
+            <div id="col-toggles" class="col-toggles"></div>
+          </details>
+          <button id="f-clear" class="btn btn-sm btn-ghost" type="button">Clear</button>
+        </nav>
+
+        <!-- Search progress. Hidden until a run starts (here or on the scheduler), then
+             shows the live phase + how many opportunities have been found. -->
+        <div id="run-banner" class="run-banner" hidden aria-live="polite">
+          <span id="run-banner-spin" class="run-spin" aria-hidden="true"></span>
+          <div class="run-banner-body">
+            <div id="run-banner-msg" class="run-banner-msg"></div>
+            <div id="run-banner-sub" class="run-banner-sub"></div>
+          </div>
+          <div id="run-banner-count" class="run-banner-count" hidden>
+            <b id="run-banner-found">0</b><span>found</span>
+          </div>
+          <button id="run-banner-close" class="icon-btn run-banner-close" type="button" aria-label="Dismiss" hidden>✕</button>
+        </div>
+
+        <section id="board" class="board" aria-busy="true">
+          <div class="loading">Loading…</div>
+        </section>
+
+        <!-- Resizable LOGS panel -->
+        <section id="logs" class="logs" data-collapsed="false">
+          <div id="logs-resizer" class="logs-resizer" title="Drag to resize"></div>
+          <div class="logs-head">
+            <button id="logs-toggle" class="logs-title" title="Show / hide logs">
+              <span class="logs-caret">▾</span> LOGS <span id="logs-count" class="logs-count">0</span>
+            </button>
+            <input id="logs-filter" class="logs-filter" type="search" placeholder="Filter logs…" autocomplete="off" />
+            <label class="f-field"><span>Level</span>
+              <select id="logs-level">
+                <option value="">All</option>
+                <option value="info">Info</option>
+                <option value="warn">Warn</option>
+                <option value="error">Error</option>
+                <option value="debug">Debug</option>
+              </select>
+            </label>
+            <label class="logs-autoscroll"><input id="logs-autoscroll" type="checkbox" checked /> Auto-scroll</label>
+            <button id="logs-clear" class="btn btn-sm btn-ghost" type="button">Clear</button>
+          </div>
+          <div id="logs-body" class="logs-body" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Job detail drawer -->
+    <aside id="drawer" class="drawer" hidden>
+      <div class="drawer-head">
+        <button id="drawer-close" class="icon-btn" aria-label="Close">✕</button>
+        <span id="drawer-fit" class="fit"></span>
+        <h2 id="drawer-title"></h2>
+      </div>
+      <div id="drawer-body" class="drawer-body"></div>
+    </aside>
+    <div id="scrim" class="scrim" hidden></div>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script src="/nav.js" type="module"></script>
+    <script src="/notify.js" type="module"></script>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

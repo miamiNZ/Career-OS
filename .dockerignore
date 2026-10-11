@@ -1,0 +1,23 @@
+# Dependencies + build output — reinstalled/regenerated inside the image.
+node_modules
+dist
+
+# Secrets + local state — passed at runtime via --env-file / bind mounts, never baked in.
+.env
+.career-os-state.json
+.career-os-usage.json
+inbox
+
+# VCS + tooling noise.
+.git
+.gitignore
+.github
+*.log
+npm-debug.log*
+
+# Docs + host tooling not needed in the image.
+Makefile
+README.md
+LICENSE
+deploy
+career-os-image.tar.gz

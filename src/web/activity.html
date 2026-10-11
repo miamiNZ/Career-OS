@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Career OS · Activity</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header id="header" class="topbar">
+      <div class="header-left">
+        <button id="nav-toggle" class="nav-toggle js-nav-toggle" type="button" aria-label="Toggle menu">☰</button>
+        <div class="brand">
+          <img class="logo" src="/logo.png" width="40" height="40" alt="Career OS" />
+          <div>
+            <h1>Career&nbsp;OS <span id="app-version" class="version"></span></h1>
+            <p class="tagline">Job search · NZ · local AI</p>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div id="sched" class="sched" title="Scheduler"></div>
+        <span id="apikey" class="dot-chip" title="Ollama status"></span>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside id="left-panel" class="left-panel">
+        <nav class="nav" aria-label="Main menu"><ul id="nav-list"></ul></nav>
+        <button class="minify-toggle js-nav-toggle" type="button" title="Collapse / expand menu" aria-label="Collapse menu">
+          <span class="minify-ico">«</span>
+        </button>
+      </aside>
+
+      <main id="content" class="content">
+        <div class="ribbon">
+          <span class="ribbon-crumb">Career OS</span>
+          <span class="ribbon-sep">›</span>
+          <span class="ribbon-here">Activity</span>
+        </div>
+
+        <section class="act-panel">
+          <div class="act-head">
+            <h2 class="act-title">Activity</h2>
+            <span id="act-summary" class="act-summary">—</span>
+          </div>
+
+          <div class="jtable-wrap">
+            <table class="jtable act-table">
+              <thead>
+                <tr>
+                  <th class="act-th-check"><input type="checkbox" id="act-all" title="Select all" /></th>
+                  <th class="act-th-ico" aria-label="Type"></th>
+                  <th class="act-th-what">Task</th>
+                  <th class="act-th-detail">Detail</th>
+                  <th class="act-th-step">Step</th>
+                  <th class="act-th-state">Status</th>
+                  <th class="act-th-eta">Time Left</th>
+                  <th class="act-th-took">Time Taken</th>
+                  <th class="act-th-prog">Progress</th>
+                  <th class="act-th-actions th-actions">
+                    <button id="act-clear" class="btn btn-sm icon-act" type="button" title="Clear all finished tasks">⚙</button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="act-rows"></tbody>
+            </table>
+          </div>
+          <p id="act-empty" class="act-empty">Nothing running. Start a search, or mark a job Interested.</p>
+          <div id="act-bulk" class="act-bulk" hidden>
+            <span id="act-bulk-n" class="act-bulk-n"></span>
+            <button id="act-bulk-go" class="btn btn-sm" type="button">Cancel / dismiss selected</button>
+          </div>
+          <p id="act-total" class="act-total">Total records: 0</p>
+          <p class="act-foot">
+            Live view, refreshed every 2s. Finished tasks stay listed until dismissed with ×.
+            Cancelling stops a task after its current step — a model call already in flight has
+            to finish first.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <script src="/nav.js" type="module"></script>
+    <script src="/notify.js" type="module"></script>
+    <script src="/activity.js" type="module"></script>
+  </body>
+</html>
